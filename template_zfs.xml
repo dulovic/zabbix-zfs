@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>5.0</version>
-    <date>2021-01-31T15:43:39Z</date>
+    <date>2021-09-14T21:16:20Z</date>
     <groups>
         <group>
             <name>Templates</name>
@@ -165,8 +165,9 @@
                     <triggers>
                         <trigger>
                             <expression>{min(600)}&gt;{$ZFS_ARC_META_THRESHOLD}</expression>
-                            <name>ZFS - ARC meta usage too high ({ITEM.LASTVALUE})</name>
+                            <name>ZFS - ARC meta usage too high (&lt; {$ZFS_ARC_META_THRESHOLD}%)</name>
                             <priority>AVERAGE</priority>
+                            <description>Last value: {ITEM.LASTVALUE}</description>
                         </trigger>
                     </triggers>
                 </item>
@@ -306,6 +307,16 @@
                             </master_item>
                         </item_prototype>
                         <item_prototype>
+                            <name>Dataset &quot;{#DS_NAME}&quot; - Number of snapshots</name>
+                            <key>zfs.ds.snap_count[&quot;{#DS_NAME}&quot;]</key>
+                            <history>30d</history>
+                            <applications>
+                                <application>
+                                    <name>ZFS - Datasets</name>
+                                </application>
+                            </applications>
+                        </item_prototype>
+                        <item_prototype>
                             <name>Dataset &quot;{#DS_NAME}&quot; - Used</name>
                             <type>DEPENDENT</type>
                             <key>zfs.ds.used[&quot;{#DS_NAME}&quot;]</key>
@@ -343,13 +354,15 @@
                             <trigger_prototypes>
                                 <trigger_prototype>
                                     <expression>{min(600)}&gt;{$ZFS_DS_USAGE_CRIT}</expression>
-                                    <name>Dataset &quot;{#DS_NAME}&quot; usage is critical ({ITEM.LASTVALUE})</name>
+                                    <name>Dataset &quot;{#DS_NAME}&quot; usage is critical (&gt; {$ZFS_DS_USAGE_CRIT}%)</name>
                                     <priority>AVERAGE</priority>
+                                    <description>Last value: {ITEM.LASTVALUE}</description>
                                 </trigger_prototype>
                                 <trigger_prototype>
                                     <expression>{min(600)}&gt;{$ZFS_DS_USAGE_HIGH}</expression>
-                                    <name>Dataset &quot;{#DS_NAME}&quot; usage is high ({ITEM.LASTVALUE})</name>
-                                    <priority>AVERAGE</priority>
+                                    <name>Dataset &quot;{#DS_NAME}&quot; usage is high (&gt; {$ZFS_DS_USAGE_HIGH}%)</name>
+                                    <priority>HIGH</priority>
+                                    <description>Last value: {ITEM.LASTVALUE}</description>
                                 </trigger_prototype>
                             </trigger_prototypes>
                         </item_prototype>
@@ -438,8 +451,9 @@
                             <trigger_prototypes>
                                 <trigger_prototype>
                                     <expression>{last()}&gt;{$ZFS_VDEV_ERROR_THRESHOLD}</expression>
-                                    <name>Device &quot;{#DEV_NAME}&quot; has too many checksum errors ({ITEM.LASTVALUE})</name>
+                                    <name>Device &quot;{#DEV_NAME}&quot; has too many checksum errors (&gt; {$ZFS_VDEV_ERROR_THRESHOLD})</name>
                                     <priority>AVERAGE</priority>
+                                    <description>Last value: {ITEM.LASTVALUE}</description>
                                 </trigger_prototype>
                             </trigger_prototypes>
                         </item_prototype>
@@ -466,8 +480,9 @@
                             <trigger_prototypes>
                                 <trigger_prototype>
                                     <expression>{last()}&gt;{$ZFS_VDEV_ERROR_THRESHOLD}</expression>
-                                    <name>Device &quot;{#DEV_NAME}&quot; has too many read errors ({ITEM.LASTVALUE})</name>
+                                    <name>Device &quot;{#DEV_NAME}&quot; has too many read errors (&gt; {$ZFS_VDEV_ERROR_THRESHOLD})</name>
                                     <priority>AVERAGE</priority>
+                                    <description>Last value: {ITEM.LASTVALUE}</description>
                                 </trigger_prototype>
                             </trigger_prototypes>
                         </item_prototype>
@@ -494,8 +509,9 @@
                             <trigger_prototypes>
                                 <trigger_prototype>
                                     <expression>{last()}&gt;{$ZFS_VDEV_ERROR_THRESHOLD}</expression>
-                                    <name>Device &quot;{#DEV_NAME}&quot; has too many write errors ({ITEM.LASTVALUE})</name>
+                                    <name>Device &quot;{#DEV_NAME}&quot; has too many write errors (&gt; {$ZFS_VDEV_ERROR_THRESHOLD})</name>
                                     <priority>AVERAGE</priority>
+                                    <description>Last value: {ITEM.LASTVALUE}</description>
                                 </trigger_prototype>
                             </trigger_prototypes>
                         </item_prototype>
@@ -717,8 +733,9 @@
                             <trigger_prototypes>
                                 <trigger_prototype>
                                     <expression>{last()}&gt;{$ZFS_L2ARC_ERROR_THRESHOLD}</expression>
-                                    <name>ZFS - L2ARC too many checksum errors ({ITEM.LASTVALUE})</name>
+                                    <name>ZFS - L2ARC too many checksum errors  (&gt; {$ZFS_L2ARC_ERROR_THRESHOLD})</name>
                                     <priority>AVERAGE</priority>
+                                    <description>Last value: {ITEM.LASTVALUE}</description>
                                 </trigger_prototype>
                             </trigger_prototypes>
                         </item_prototype>
@@ -747,8 +764,9 @@
                             <trigger_prototypes>
                                 <trigger_prototype>
                                     <expression>{max(600)}&lt;{$ZFS_L2ARC_HITRATE_THRESHOLD}</expression>
-                                    <name>ZFS - L2ARC hit rate too low ({ITEM.LASTVALUE})</name>
+                                    <name>ZFS - L2ARC hit rate too low (&lt; {$ZFS_L2ARC_HITRATE_THRESHOLD}%)</name>
                                     <priority>WARNING</priority>
+                                    <description>Last value: {ITEM.LASTVALUE}</description>
                                 </trigger_prototype>
                             </trigger_prototypes>
                         </item_prototype>
@@ -775,8 +793,9 @@
                             <trigger_prototypes>
                                 <trigger_prototype>
                                     <expression>{last()}&gt;{$ZFS_L2ARC_ERROR_THRESHOLD}</expression>
-                                    <name>ZFS - L2ARC too many IO errors ({ITEM.LASTVALUE})</name>
+                                    <name>ZFS - L2ARC too many IO errors (&gt; {$ZFS_L2ARC_ERROR_THRESHOLD})</name>
                                     <priority>AVERAGE</priority>
+                                    <description>Last value: {ITEM.LASTVALUE}</description>
                                 </trigger_prototype>
                             </trigger_prototypes>
                         </item_prototype>
@@ -931,8 +950,9 @@ return JSON.stringify(r);</params>
                             <trigger_prototypes>
                                 <trigger_prototype>
                                     <expression>{min(600)}&gt;{$ZFS_POOL_FRAG_HIGH}</expression>
-                                    <name>Pool &quot;{#POOL_NAME}&quot; is too fragmented ({ITEM.LASTVALUE})</name>
+                                    <name>Pool &quot;{#POOL_NAME}&quot; is too fragmented (&lt; {$ZFS_POOL_FRAG_HIGH}%)</name>
                                     <priority>WARNING</priority>
+                                    <description>Last value: {ITEM.LASTVALUE}</description>
                                 </trigger_prototype>
                             </trigger_prototypes>
                         </item_prototype>
@@ -1168,13 +1188,27 @@ return JSON.stringify(r);</params>
                             <trigger_prototypes>
                                 <trigger_prototype>
                                     <expression>{min(600)}&gt;={$ZFS_POOL_USAGE_CRIT}</expression>
-                                    <name>Pool &quot;{#POOL_NAME}&quot; usage is critical({ITEM.LASTVALUE})</name>
+                                    <name>Pool &quot;{#POOL_NAME}&quot; usage is critical (&lt; {$ZFS_POOL_USAGE_CRIT}%)</name>
                                     <priority>HIGH</priority>
+                                    <description>Last value: {ITEM.LASTVALUE}</description>
+                                </trigger_prototype>
+                                <trigger_prototype>
+                                    <expression>{min(600)}&gt;={$ZFS_POOL_USAGE_AVG}</expression>
+                                    <name>Pool &quot;{#POOL_NAME}&quot; usage is high (&lt; {$ZFS_POOL_USAGE_AVG}%)</name>
+                                    <priority>AVERAGE</priority>
+                                    <description>Last value: {ITEM.LASTVALUE}</description>
                                 </trigger_prototype>
                                 <trigger_prototype>
                                     <expression>{min(600)}&gt;={$ZFS_POOL_USAGE_HIGH}</expression>
-                                    <name>Pool &quot;{#POOL_NAME}&quot; usage is high ({ITEM.LASTVALUE})</name>
-                                    <priority>AVERAGE</priority>
+                                    <name>Pool &quot;{#POOL_NAME}&quot; usage is high (&lt; {$ZFS_POOL_USAGE_HIGH}%)</name>
+                                    <priority>HIGH</priority>
+                                    <description>Last value: {ITEM.LASTVALUE}</description>
+                                </trigger_prototype>
+                                <trigger_prototype>
+                                    <expression>{min(600)}&gt;={$ZFS_POOL_USAGE_WARN}</expression>
+                                    <name>Pool &quot;{#POOL_NAME}&quot; usage is high (&lt; {$ZFS_POOL_USAGE_WARN}%)</name>
+                                    <priority>WARNING</priority>
+                                    <description>Last value: {ITEM.LASTVALUE}</description>
                                 </trigger_prototype>
                             </trigger_prototypes>
                         </item_prototype>
@@ -1248,6 +1282,11 @@ return JSON.stringify(r);</params>
                     <description>Regexp to include the pools during discovery</description>
                 </macro>
                 <macro>
+                    <macro>{$ZFS_POOL_USAGE_AVG}</macro>
+                    <value>80</value>
+                    <description>Pool usage in % when avg alert is triggered</description>
+                </macro>
+                <macro>
                     <macro>{$ZFS_POOL_USAGE_CRIT}</macro>
                     <value>95</value>
                     <description>Pool usage in % when crit alert is triggered</description>
@@ -1256,6 +1295,11 @@ return JSON.stringify(r);</params>
                     <macro>{$ZFS_POOL_USAGE_HIGH}</macro>
                     <value>85</value>
                     <description>Pool usage in % when high alert is triggered</description>
+                </macro>
+                <macro>
+                    <macro>{$ZFS_POOL_USAGE_WARN}</macro>
+                    <value>75</value>
+                    <description>Pool usage in % when warn alert is triggered</description>
                 </macro>
                 <macro>
                     <macro>{$ZFS_VDEV_ERROR_THRESHOLD}</macro>
